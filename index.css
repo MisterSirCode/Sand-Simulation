@@ -9,4 +9,5 @@ body {
 .sandbox {
     background: black;
     border: 1px solid white;
+    image-rendering: pixelated;
 }
