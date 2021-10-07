@@ -39,7 +39,8 @@ function update() {
         for (let x = 0; x < sdb[y].length; ++x) {
             let sand = sdb[y][x];
             if (sand != 0) {
-                let nx = x + Math.round(randomRange(1, 3) - 2);
+                let rx = Math.round(randomRange(1, 3) - 2);
+                let nx = rx == 1 ? ;
                 nx = clamp(x < 0 ? 0 : x > cvw ? cvw - 1 : x, 0, cvw-1);
                 let ny = clamp(y + 1, 0, cvh-1);
                 newtable[ny][nx] = 1;
