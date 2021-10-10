@@ -28,9 +28,23 @@ function getSand(x, y) {
 }
 
 function setupSandbox() {
-    for (var i = 0; i < 30; ++i) {
-        setSand(10 + i, 10 + i, 1);
+    for (var y = 0; y < 40; ++y) {
+        for (var x = 0; x < 70; ++x) {
+            setSand(10 + x, 10 + y, 1);
+        }
     }
+}
+
+function checkAroundPoint(x, y, dx, dy) {
+    let ndx = dx;
+    let ndy = dy;
+    if (sdb[y + dy][x + dx] == 1) {
+        if (sdb[y][x + dx] == 1)
+            ndx = 0;
+        if (sdb[y + dy][x] == 1)
+            ndy = 0;
+    }
+    return [ndy, ndx];
 }
 
 function update() {
@@ -39,13 +53,22 @@ function update() {
         for (let x = 0; x < sdb[y].length; ++x) {
             let sand = sdb[y][x];
             if (sand != 0) {
-                let rx = Math.round(randomRange(1, 3) - 2);
-                let nx = rx == 1 ? ;
-                nx = clamp(x < 0 ? 0 : x > cvw ? cvw - 1 : x, 0, cvw-1);
-                let ny = clamp(y + 1, 0, cvh-1);
-                newtable[ny][nx] = 1;
-                pxm.setPixel(x, y, 0, 0, 0, 255);
-                pxm.setPixel(nx, ny, 255, 0, 0, 255);
+                try {
+                    let nd = checkAroundPoint(x, y, Math.round(randomRange(1, 3) - 2), 1);
+                    let fx = clamp(x + nd[1], 0, cvw - 1);
+                    let fy = clamp(y + nd[0], 0, cvh - 2);
+                    newtable[y][x] = 0;
+                    pxm.setPixel(x, y + 1, 0, 0, 0, 255);
+                    if (newtable[fy][fx] == 1 || newtable[fy][fx] ) {
+                        newtable[fy - 0][fx - nd[1]] = 1;
+                        pxm.setPixel(fx, fy + 1, 255, 0, 0, 255);
+                    } else {
+                        newtable[fy][fx] = 1;
+                        pxm.setPixel(fx, fy + 1, 255, 255, 0, 255);
+                    }
+                } catch(e) {
+                    // console.log(e);
+                }
             }
         }
     }
@@ -59,7 +82,7 @@ function initialize() {
     sdb = createSandbox(cvw, cvh);
     setupSandbox();
     update();
-    setInterval(update, 50);
+    setInterval(update, 25);
 }
 
 initialize();
